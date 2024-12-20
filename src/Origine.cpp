@@ -31,7 +31,7 @@ int main()
 	int generazione = 0;
 	
 	sf::Font font;
-	if (!font.loadFromFile("Bellerose.ttf")) {
+	if (!font.loadFromFile("font/Bellerose.ttf")) {
 		std::cout << "font non caricato";
 	}
 	sf::Text testo;
