@@ -1,4 +1,4 @@
-#include "TrueNeural.h"
+#include "Neuralnet.h"
 //cose statiche -------------------------------------------------
 std::random_device neural::dev;
 std::mt19937 neural::rng(dev());
@@ -33,12 +33,12 @@ neural::neural(const neural& altro) : m_n(altro.m_n), m_n1(altro.m_n1), m_n2(alt
 	std::cout << "COPIATO OOOOOOOOOOOO SVEGLIA, CAZZO COPI???n";
 
 	m_n_imput = new float[m_n + 1];
-	memcpy(m_n_imput, altro.m_n_imput, sizeof(float) * (m_n + 1));	//stai anche copiando cosa c'è nei neuroni di imput
+	memcpy(m_n_imput, altro.m_n_imput, sizeof(float) * (m_n + 1));	//stai anche copiando cosa c'ï¿½ nei neuroni di imput
 
 	m_n_output = new float[m_n3];
-	memcpy(m_n_output, altro.m_n_output, sizeof(float) * (m_n3));	//stai anche copiando cosa c'è nei neuroni di output
+	memcpy(m_n_output, altro.m_n_output, sizeof(float) * (m_n3));	//stai anche copiando cosa c'ï¿½ nei neuroni di output
 
-	m_n_hidden = new float* [m_n2];	//NON, RIPETO NON stai copiando cosa c'è nei neuroni hidden
+	m_n_hidden = new float* [m_n2];	//NON, RIPETO NON stai copiando cosa c'ï¿½ nei neuroni hidden
 	for (int i = 0; i < m_n2; i++) { m_n_hidden[i] = new float[m_n1 + 1]; }
 
 
@@ -173,7 +173,7 @@ float* neural::lavora(float new_imput[]) {
 		m_n_imput[i] = new_imput[i];
 	}
 
-	//dai neuroni di imput al primo strato hidden, la nuova idea è che sommiamo tutti i valori dei neuroni precedenti moltiplicati per i rispettivi pesi, 
+	//dai neuroni di imput al primo strato hidden, la nuova idea ï¿½ che sommiamo tutti i valori dei neuroni precedenti moltiplicati per i rispettivi pesi, 
 	//e poi decidiamo se il neurone si attiva o meno
 	for (int i = 0; i < m_n1; i++) {
 		for (int j = 0; j < m_n; j++) {

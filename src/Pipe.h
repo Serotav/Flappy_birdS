@@ -1,8 +1,9 @@
 #pragma once
 #include <random> 
 #include <SFML/Graphics.hpp>
-#include "Global.h"
 #include <iostream>
+
+#include "Global_const.h"
 #include "Bird.h"
 //>> <<
 

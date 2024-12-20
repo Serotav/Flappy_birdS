@@ -1,8 +1,8 @@
 #pragma once
-#include "Global.h"
+#include "Global_const.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include "TrueNeural.h"
+#include "Neuralnet.h"
 
 //>> <<
 class ucello {

@@ -2,10 +2,16 @@
 #include<iostream>
 #include<random>
 #include<vector>
-#include"TrueNeural.h"
-#include "zipf.h"
-#include "NeuralPassato.h"
+#include<algorithm>
 
+#include"Neuralnet.h"
+#include"zipf.h"
+#include"NeuralPassato.h"
+
+/*
+The NeuralHandler class is a class that manages ALL the neural networks, it has a vector of neural networks and a vector of past neural networks(used for the mutation step).
+It has a function that checks if all the neural networks are dead, if they are all dead it mutates them all.
+*/
 class NeuralHandler {
 
 private://vettori di reti e di salvataggi
@@ -24,7 +30,7 @@ public: //construttori
 
 public://funzioni public
 	neural* rp_Singolarete(size_t i);	//ritorna il puntatore ad una singola rete
-	bool mutato();						//controlla se sono tutti morti, se c'è qualcuno vivo ritorna false, altrimenti fa mutare tutti e ritorna true
+	bool mutato();						//controlla se sono tutti morti, se c'ï¿½ qualcuno vivo ritorna false, altrimenti fa mutare tutti e ritorna true
 	size_t NumeroVivi()const;				//indovina cosa fa
 
 private:
@@ -35,7 +41,6 @@ public://funzioni inutili
 
 
 };
-//cose statiche
 
 
 //construttori----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -70,7 +75,7 @@ bool NeuralHandler::ControllaVivi() const{
 neural* NeuralHandler::rp_Singolarete(size_t i){
 	if(i<m_reti.size())
 		return &m_reti[i]; //questa la devi assegnare ad un neural*, non &neural
-	std::cout << "\n Neural Handler: stai cercando di farti ritornare una rete che è fuori dal range, ti becchi null ptr";
+	std::cout << "\n Neural Handler: stai cercando di farti ritornare una rete che ï¿½ fuori dal range, ti becchi null ptr";
 	return nullptr;
 }
 

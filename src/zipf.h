@@ -3,21 +3,14 @@
 #include <random>
 #include <cmath>
 #include <assert.h>
-#include"Global.h"
-/*
-std::string random_number() {
-    std::random_device dev;
-    std::mt19937 rng(dev());
-    std::uniform_real_distribution<unsigned long long> range(0, );
-}
-*/
 
+#include"Global_const.h"
 
 class zipf {
 
 private:
     double m_c;                     //costante di normalizzazione
-    double* m_sum_probs;            //somma di probabilità pre calcolata
+    double* m_sum_probs;            //somma di probabilitï¿½ pre calcolata
     double m_z;                     //numero casuale
     int m_n;                        //numero di oggetti nella distribuzione
     int m_zipf_value;               //numero generato da ritornare
@@ -69,7 +62,7 @@ zipf::~zipf() {
 
 }
 
-//l'unica funzione (ora non più)
+//l'unica funzione (ora non piï¿½)
 int zipf::Rcasuale() {
 
     do{
@@ -98,60 +91,3 @@ int zipf::Rcasuale() {
 int zipf::CasualeNonzipf() {
     return range_nonzipf(rng);
 }
-/*
-int zipff(int n)
-{
-    static int first = true;      // Static first time flag
-    static double c = 0;          // Normalization constant
-    static double* sum_probs;     // Pre-calculated sum of probabilities
-    double z;                     // Uniform random number (0 < z < 1)
-    int zipf_value;               // Computed exponential value to be returned
-    int    i;                     // Loop counter
-    int low, high, mid;           // Binary-search bounds
-
-    static std::random_device dev;
-    static std::mt19937 rng(dev());
-    static std::uniform_real_distribution<double> range(0, 1);
-
-    // Compute normalization constant on first call only
-    if (first == true)
-    {
-        for (i = 1; i <= n; i++)
-            c = c + (1.0 / i);
-         c = 1.0 / c;
-               
-        //sum_probs = malloc((n + 1) * sizeof(*sum_probs));
-        sum_probs = new double[n + 1];
-        sum_probs[0] = 0;
-        for (i = 1; i <= n; i++) {
-            sum_probs[i] = sum_probs[i - 1] + c / i;
-            std::cout << "sum di :" << i <<" " << sum_probs[i] << "\n";
-        }
-        first = false;
-    }
-
-    // Pull a uniform random number (0 < z < 1)
-    do
-    {
-        z = range(rng);
-    } while ((z == 0) || (z == 1));
-
-    // Map z to the value
-    low = 1, high = n, mid;
-    do {
-        mid = floor((low + high) / 2);
-        if (sum_probs[mid] >= z && sum_probs[mid - 1] < z) {
-            zipf_value = mid;
-            break;
-        }
-        else if (sum_probs[mid] >= z) {
-            high = mid - 1;
-        }
-        else {
-            low = mid + 1;
-        }
-    } while (low <= high);
-
-    
-    return zipf_value;
-}*/

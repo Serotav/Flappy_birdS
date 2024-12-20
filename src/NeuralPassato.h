@@ -1,5 +1,5 @@
 #pragma once
-#include"TrueNeural.h"
+#include"Neuralnet.h"
 class neural;
 class NeuralPassato {
 
