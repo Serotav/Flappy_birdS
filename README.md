@@ -2,8 +2,11 @@
 
 
 ### How to run it
-First ensure that you have the necessary libraryes, in linux SFML can be installed using the packet manager on arch `sudo pacman -S sfml` then use `make` to compile all in `flappy_birdS`! 
+Ensure that you have the necessary libraries installed. On linux SFML can be installed with package manager on arch `sudo pacman -S sfml` then use `make` to compile the project into the `flappy_birdS` executable! 
 ```bash
 sudo pacman -S sfml
-git 
+git clone https://github.com/Serotav/Flappy_birdS
+cd Flappy_birdS
+make
+./flappy_birdS
 ```
