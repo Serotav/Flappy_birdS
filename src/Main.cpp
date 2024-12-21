@@ -9,24 +9,24 @@
 #include "NeuralHandler.h"
 
 sf::Vector2i pipevicina(pipe tubii[]);
-int DistanzaYpipeVicina(pipe tubii[], gameBird& bird);
+int CalculateNearestPipeYDistance(pipe tubii[], gameBird& bird);
 void write_text(const std::unique_ptr<sf::Text>& testo, std::unique_ptr<sf::RenderWindow>& window, int score, int generazione, int vivi);
 int numero_vivi(gameBird[]);
 std::unique_ptr<sf::RenderWindow> create_window();
-std::pair<std::unique_ptr<sf::Text>, std::shared_ptr<sf::Font>> create_text();
+std::pair<std::unique_ptr<sf::Text>, std::shared_ptr<sf::Font>> createText();
 void game_loop(std::unique_ptr<sf::RenderWindow>& window, std::unique_ptr<sf::Text> &testo, std::shared_ptr<sf::Font>& font, gameBird bird[], pipe tubi[], NeuralHandler& reti);
 
 int main()
 {
 	auto window = create_window();
-	auto [testo, font] = create_text();
+	auto [testo, font] = createText();
 
 	pipe tubi[2] = { screenWidth,screenWidth + pipeGapHeight + pipeThickness };
 	NeuralHandler reti(numberOfBirds, 2, 3, 2, 1);
 	
 	gameBird flock[numberOfBirds];
 	for (int i = 0; i < numberOfBirds; i++) {
-		flock[i].get_brain(reti.rp_Singolarete(i));
+		flock[i].get_brain(reti.give_brain(i));
 	}
 	
 
@@ -34,7 +34,7 @@ int main()
 
 }
 
-void game_loop(std::unique_ptr<sf::RenderWindow>& window, std::unique_ptr<sf::Text> &testo, std::shared_ptr<sf::Font>& font, gameBird bird[], pipe tubi[], NeuralHandler& reti){
+void game_loop(std::unique_ptr<sf::RenderWindow>& window, std::unique_ptr<sf::Text> &text, std::shared_ptr<sf::Font>& font, gameBird flock[], pipe pipes[], NeuralHandler& reti){
 	int score = 0;
 	int generationCount = 0;
 	sf::Event event;
@@ -49,46 +49,45 @@ void game_loop(std::unique_ptr<sf::RenderWindow>& window, std::unique_ptr<sf::Te
 				window->close();
 		}
 
-		for (int i = 0; i < numberOfBirds; i++) {
+		for (int i =0; i < numberOfBirds; i++) {
 
-			if (bird[i].isAlive()) {
-				bird[i].jump(DistanzaYpipeVicina(tubi, bird[i]));
-				tubi[0].totalecollisioni(bird[i].vivo, bird[i]);
-				tubi[1].totalecollisioni(bird[i].vivo, bird[i]);
+			if (flock[i].isAlive()) {
+				flock[i].jump(CalculateNearestPipeYDistance(pipes, flock[i]));
+				pipes[0].totalecollisioni(flock[i]);
+				pipes[1].totalecollisioni(flock[i]);
 			}
 
-			bird[i].render(*window);
+			flock[i].render(*window);
 		}
 
-		tubi[0].updateAndDraw(*window, score);
-		tubi[1].updateAndDraw(*window, score);
+		pipes[0].updateAndDraw(*window, score);
+		pipes[1].updateAndDraw(*window, score);
 
-		if (reti.mutato()) {
+		if (reti.tryMutate()) {
 			score = 0;
-			tubi[0].restart(screenWidth);
-			tubi[1].restart(screenWidth + pipeGapHeight + pipeThickness);
+			pipes[0].restart(screenWidth);
+			pipes[1].restart(screenWidth + pipeGapHeight + pipeThickness);
 			generationCount++;
 			for (int i = 0; i < numberOfBirds; i++) {
-				bird[i].resetta();
+				flock[i].resetBird();
 			}
 		}
 
-		write_text(testo, window, score, generationCount, reti.NumeroVivi());
+		write_text(text, window, score, generationCount, reti.GetAliveCount());
 		window->display();
 	}
 }
 
 
-
 std::unique_ptr<sf::RenderWindow> create_window(){
     sf::ContextSettings settings;
-    settings.antialiasingLevel = 80;
+    settings.antialiasingLevel = 16;
     auto window = std::make_unique<sf::RenderWindow>(sf::VideoMode(screenWidth, screenLenght), "Flappy_birdS", sf::Style::Default, settings);
     window->setFramerateLimit(framerete);
     return window;
 }
 
-std::pair<std::unique_ptr<sf::Text>, std::shared_ptr<sf::Font>> create_text(){
+std::pair<std::unique_ptr<sf::Text>, std::shared_ptr<sf::Font>> createText(){
     auto font = std::make_shared<sf::Font>();
     if (!font->loadFromFile("font/Bellerose.ttf")) {
         std::cout << "error while loading the font";
@@ -109,7 +108,7 @@ sf::Vector2i pipevicina(pipe tubii[]) {
 	return tubii[1].rposizioni();
 }
 
-int DistanzaYpipeVicina(pipe tubii[], gameBird& bird) {
+int CalculateNearestPipeYDistance(pipe tubii[], gameBird& bird) {
 	if (tubii[0].ritornaposizione() < tubii[1].ritornaposizione()) 
 		return bird.rAltezza() - (tubii[0].rposizioni().y + pipeGapDistance / 2);
 
@@ -123,19 +122,11 @@ void write_text(const std::unique_ptr<sf::Text>& testo, std::unique_ptr<sf::Rend
     window->draw(*testo);
 
     testo->setPosition(0, 0);
-    testo->setString("Gen:");
-    window->draw(*testo);
-
-    testo->setPosition(80, 0);
-    testo->setString(std::to_string(generazione));
+    testo->setString("Gen: "+std::to_string(generazione));
     window->draw(*testo);
 
     testo->setPosition(330, 0);
-    testo->setString("Vivi:");
-    window->draw(*testo);
-
-    testo->setPosition(390, 0);
-    testo->setString(std::to_string(vivi));
+    testo->setString("Alive: "+std::to_string(vivi));
     window->draw(*testo);
 }
 

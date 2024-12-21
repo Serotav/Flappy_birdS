@@ -1,89 +1,71 @@
 #pragma once
-#include "Global_const.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
+
+#include "Global_const.h"
 #include "Neuralnet.h"
 
 //>> <<
 class gameBird {
 
-	int altezza;
+	int height;
+	int x_position;
+
 	float speed;
-	int posizione;
-	static int uccisi;
-	sf::CircleShape corpo;
-	neural* cervello;
-public: bool vivo = true;
+	sf::CircleShape birdBody;
+	neural* brain;
+public: bool isAlive = true;
 
 
 public:
-	gameBird() {altezza = screenLenght / 2; speed = 0; posizione = radius + 5; ;  corpo.setRadius(radius); corpo.setFillColor(sf::Color(randomizzacolore(), randomizzacolore(), randomizzacolore())); corpo.setOrigin(radius, radius); }
-
-	int rAltezza() const { return this->altezza; }
-
-	int rPosizione() const { return this->posizione; }
-
+	gameBird() {height = screenLenght / 2; speed = 0; x_position = radius + 5; ;  birdBody.setRadius(radius); birdBody.setFillColor(sf::Color(ranzodmizeColor(), ranzodmizeColor(), ranzodmizeColor())); birdBody.setOrigin(radius, radius); }
+	int rAltezza() const { return this->height; }
+	int rPosizione() const { return this->x_position; }
 	float rRaggio() const { return radius; }
 
-	void updata(int speed = 0) {
-		this->speed += 0.25;
-		this->speed -= speed;
+	void updatePosition(int speed = 0) {
+		this->speed += 0.25 - speed;
+
 		if (this->speed > topspeed) { this->speed = topspeed; }
 		if (this->speed < -topspeed) { this->speed = -topspeed; }
 
-		altezza += this->speed;
+		height += this->speed;
 
 	}
 
 	void render(sf::RenderWindow& window) {
-		if (vivo) {
-			corpo.setPosition(posizione, altezza);
-			window.draw(corpo);
+		if (isAlive) {
+			birdBody.setPosition(x_position, height);
+			window.draw(birdBody);
 		}
 	}
 
 	void jump(int distanzainy) {
-		this->controlla();
-		if (vivo) {
-			float temp[2];
-			temp[0] = speed;
-			temp[1] = distanzainy;
+		if (!isAlive) return; 
+		
+		this->checkBounds();
+		float movementVector[2] = {speed, distanzainy};
 
-			if (cervello->lavora(temp)[0] > 0) {
-				
-				this->updata(10);
-
-			}
-			this->updata();
+		if (brain->lavora(movementVector)[0] > 0) 
+			this->updatePosition(10);
 			
-		}
-
-		/*else if (vivo == false && this->altezza < lunghezza - raggio - 1) {
-			this->speed += 0.5;
-			if (this->speed > topspeed) { this->speed = topspeed; }
-			if (this->speed < -topspeed) { this->speed = -topspeed; }
-
-			this->altezza += this->speed;
-
-		}*/
-
+		else 
+			this->updatePosition();
+			
 
 	}
 
-	void controlla() {
-		
-		if (altezza > screenLenght - radius) { vivo = false;}
-		if (altezza < 0 + radius) { vivo = false; }
-		if (!vivo) { cervello->uccidilo(); uccisi++; }
+	void checkBounds() {
+		if (height > screenLenght - radius) {this->die();}
+		if (height < 0 + radius) {this->die();}
 	}
 
 	sf::Vector2f ritornaposizione() {
-
-		return sf::Vector2f(posizione, altezza);
+		return sf::Vector2f(x_position, height);
 	}
 
 
-	int randomizzacolore() {
+	int ranzodmizeColor() {
 
 		static std::random_device dev;
 		static std::mt19937 rng(dev());
@@ -92,22 +74,24 @@ public:
 		return range(rng);
 	}
 
-	void resetta() {
-		altezza = screenLenght / 2; 
-		vivo = true;
-		if (uccisi) {
-			std::cout << "Morti da sopra/sotto: " << uccisi << "\n";
-			uccisi = 0;
-		}
+	void resetBird() {
+		height = screenLenght / 2; 
+		isAlive = true;
+
 	}
 
-	void get_brain(neural* eccolo) {
-		cervello = eccolo;
+	void get_brain(neural* new_brain) {
+		brain = new_brain;
+	}
+
+	void die() {
+		if (!isAlive) return;
+		isAlive = false;
+		brain->die();
 	}
 
 	bool isAlive() {
-		return cervello->ritorna_isvivo();
+		return isAlive;
 	}
 
 };
-int gameBird::uccisi = 0;

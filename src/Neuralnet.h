@@ -65,7 +65,7 @@ public: //funzioni pubbliche
 	float** ritorna_pesi_imput_hidden()const;		//ritorna un puntatore ai pesi dell'imput-hidden layer (m_c_imputHidden)
 	float** ritorna_pesi_hidden_outout()const;		//ritorna un puntatore ai pesi dell'ultimo hidden-outout layer (m_c_hiddenOutput)
 	float*** ritorna_pesi_hidden()const;			//ritorna un puntatore ai pesi del'hidden layer (m_c_hidden)
-	void uccidilo();								//quando viene chiamata questa si determina il punteggio (m_score) di questa rete
+	void die();								//quando viene chiamata questa si determina il punteggio (m_score) di questa rete
 	float ritorna_punteggio()const;						//ritorna il punteggio della rete 
 	bool ritorna_isvivo()const;
 

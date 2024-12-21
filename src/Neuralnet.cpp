@@ -292,7 +292,7 @@ void neural::muta(NeuralPassato& altro) {
 
 }
 
-void neural::uccidilo() {
+void neural::die() {
 	if (m_isvivo) {
 		m_isvivo = false;
 		m_score = ORARIO - m_inizio;
