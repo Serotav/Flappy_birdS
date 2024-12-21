@@ -7,5 +7,6 @@ const float radius = 23;
 const int pipeThickness = 85;
 const int pipeLength = 500;
 const int pipeGapHeight = 200;
-const int pipeGapDistance = 155;
+const int pipeGapDistance = 150;
 const int numberOfBirds = 1024;
+const int jump_height = 5;

@@ -10,7 +10,7 @@
 
 sf::Vector2i pipevicina(pipe tubii[]);
 int CalculateNearestPipeYDistance(pipe tubii[], gameBird& bird);
-void write_text(const std::unique_ptr<sf::Text>& testo, std::unique_ptr<sf::RenderWindow>& window, int score, int generazione, int vivi);
+void writeText(const std::unique_ptr<sf::Text>& testo, std::unique_ptr<sf::RenderWindow>& window, int score, int generazione, int vivi);
 int numero_vivi(gameBird[]);
 std::unique_ptr<sf::RenderWindow> create_window();
 std::pair<std::unique_ptr<sf::Text>, std::shared_ptr<sf::Font>> createText();
@@ -49,19 +49,22 @@ void game_loop(std::unique_ptr<sf::RenderWindow>& window, std::unique_ptr<sf::Te
 				window->close();
 		}
 
-		for (int i =0; i < numberOfBirds; i++) {
+		pipes[0].updatePosition(score);
+		pipes[1].updatePosition(score);
 
-			if (flock[i].isAlive()) {
-				flock[i].jump(CalculateNearestPipeYDistance(pipes, flock[i]));
-				pipes[0].totalecollisioni(flock[i]);
-				pipes[1].totalecollisioni(flock[i]);
-			}
+		for (int i =0; i < numberOfBirds; i++) {
+			if (!flock[i].isAlive()) continue; 
+
+			flock[i].jump(CalculateNearestPipeYDistance(pipes, flock[i]));
+			
+			pipes[0].evaluateCollisions(flock[i]);
+			pipes[1].evaluateCollisions(flock[i]);
 
 			flock[i].render(*window);
 		}
 
-		pipes[0].updateAndDraw(*window, score);
-		pipes[1].updateAndDraw(*window, score);
+		pipes[0].render(*window);
+		pipes[1].render(*window);
 
 		if (reti.tryMutate()) {
 			score = 0;
@@ -73,7 +76,7 @@ void game_loop(std::unique_ptr<sf::RenderWindow>& window, std::unique_ptr<sf::Te
 			}
 		}
 
-		write_text(text, window, score, generationCount, reti.GetAliveCount());
+		writeText(text, window, score, generationCount, reti.GetAliveCount());
 		window->display();
 	}
 }
@@ -116,7 +119,7 @@ int CalculateNearestPipeYDistance(pipe tubii[], gameBird& bird) {
 }
 
 
-void write_text(const std::unique_ptr<sf::Text>& testo, std::unique_ptr<sf::RenderWindow>& window, int score, int generazione, int vivi) {
+void writeText(const std::unique_ptr<sf::Text>& testo, std::unique_ptr<sf::RenderWindow>& window, int score, int generazione, int vivi) {
     testo->setPosition(window->getSize().x / 2, 0);
     testo->setString(std::to_string(score));
     window->draw(*testo);
@@ -125,7 +128,7 @@ void write_text(const std::unique_ptr<sf::Text>& testo, std::unique_ptr<sf::Rend
     testo->setString("Gen: "+std::to_string(generazione));
     window->draw(*testo);
 
-    testo->setPosition(330, 0);
+    testo->setPosition(300, 0);
     testo->setString("Alive: "+std::to_string(vivi));
     window->draw(*testo);
 }

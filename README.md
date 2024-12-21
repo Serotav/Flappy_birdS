@@ -7,6 +7,6 @@ Ensure that you have the necessary libraries installed. On linux SFML can be ins
 sudo pacman -S --needed sfml
 git clone https://github.com/Serotav/Flappy_birdS
 cd Flappy_birdS
-make
+make -j4
 ./flappy_birdS
 ```

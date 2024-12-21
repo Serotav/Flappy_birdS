@@ -14,7 +14,7 @@ class gameBird {
 	float speed;
 	sf::CircleShape birdBody;
 	neural* brain;
-public: bool isAlive = true;
+public: bool alive = true;
 
 
 public:
@@ -34,25 +34,23 @@ public:
 	}
 
 	void render(sf::RenderWindow& window) {
-		if (isAlive) {
-			birdBody.setPosition(x_position, height);
-			window.draw(birdBody);
-		}
+		if (!alive) return; 
+		
+		birdBody.setPosition(x_position, height);
+		window.draw(birdBody);
 	}
 
-	void jump(int distanzainy) {
-		if (!isAlive) return; 
+	void jump(int verticalOffset) {
+		if (!alive) return; 
 		
 		this->checkBounds();
-		float movementVector[2] = {speed, distanzainy};
+		float movementVector[2] = {speed, verticalOffset};
 
 		if (brain->lavora(movementVector)[0] > 0) 
-			this->updatePosition(10);
+			this->updatePosition(jump_height);
 			
 		else 
 			this->updatePosition();
-			
-
 	}
 
 	void checkBounds() {
@@ -76,8 +74,7 @@ public:
 
 	void resetBird() {
 		height = screenLenght / 2; 
-		isAlive = true;
-
+		alive = true;
 	}
 
 	void get_brain(neural* new_brain) {
@@ -85,13 +82,13 @@ public:
 	}
 
 	void die() {
-		if (!isAlive) return;
-		isAlive = false;
+		if (!alive) return;
+		alive = false;
 		brain->die();
 	}
 
 	bool isAlive() {
-		return isAlive;
+		return alive;
 	}
 
 };

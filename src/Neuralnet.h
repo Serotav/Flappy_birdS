@@ -4,8 +4,8 @@
 #include<chrono>
 #include <cstring>
 #include "NeuralPassato.h"
-#define RANGE_MUTAZIONI 0.10	//di quanto, al massimo, un parametro deve mutare 0.05 vuol dire che pu� aumentare o diminuire in un range tra -5% e + 5%
-#define PROB_MUTAZIONE	0.10	//probabillit� che una mutazione avvenga
+#define RANGE_MUTAZIONI 0.50	//di quanto, al massimo, un parametro deve mutare 0.05 vuol dire che pu� aumentare o diminuire in un range tra -5% e + 5%
+#define PROB_MUTAZIONE	0.30	//probabillit� che una mutazione avvenga
 
 #define ORARIO					std::chrono::high_resolution_clock::now()	// ritorna l'orario quasi esatto quando chiamato
 #define DURATA					std::chrono::duration<float>				//oggetto che contiene una durata
