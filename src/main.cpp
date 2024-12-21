@@ -3,10 +3,10 @@
 #include <sstream>
 #include <memory>
 
-#include "Global_const.h"
-#include "Bird.h"
-#include "Pipe.h"
-#include "NeuralHandler.h"
+#include "global_const.h"
+#include "bird.h"
+#include "pipe.h"
+#include "neuralHandler.h"
 
 sf::Vector2i pipevicina(pipe tubii[]);
 int CalculateNearestPipeYDistance(pipe tubii[], gameBird& bird);
@@ -26,7 +26,7 @@ int main()
 	
 	gameBird flock[numberOfBirds];
 	for (int i = 0; i < numberOfBirds; i++) {
-		flock[i].get_brain(reti.give_brain(i));
+		flock[i].get_brain(reti.getBrain(i));
 	}
 	
 
@@ -76,7 +76,7 @@ void game_loop(std::unique_ptr<sf::RenderWindow>& window, std::unique_ptr<sf::Te
 			}
 		}
 
-		writeText(text, window, score, generationCount, reti.GetAliveCount());
+		writeText(text, window, score, generationCount, reti.getAliveCount());
 		window->display();
 	}
 }

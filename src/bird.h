@@ -2,8 +2,8 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
-#include "Global_const.h"
-#include "Neuralnet.h"
+#include "global_const.h"
+#include "neuralnet.h"
 
 //>> <<
 class gameBird {
@@ -46,7 +46,7 @@ public:
 		this->checkBounds();
 		float movementVector[2] = {speed, verticalOffset};
 
-		if (brain->lavora(movementVector)[0] > 0.5f) 
+		if (brain->feedForward(movementVector)[0] > 0.5f) 
 			this->updatePosition(jump_height);
 			
 		else 

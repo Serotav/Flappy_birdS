@@ -3,8 +3,8 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
-#include "Global_const.h"
-#include "Bird.h"
+#include "global_const.h"
+#include "bird.h"
 //>> <<
 
 class pipe {
