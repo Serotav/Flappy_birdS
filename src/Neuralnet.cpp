@@ -125,11 +125,7 @@ void neural::setta_bias() {
 }
 
 float neural::activation_function(float numero) const {
-	if (numero > 1)
-		return 1;
-	else {
-		return 0;
-	}
+
 
 	return 1 / (1 + exp(-numero)); // en.wikipedia.org/wiki/Logistic_function
 
@@ -153,11 +149,10 @@ void neural::azzera_neuroni() {
 
 float neural::casualizza_mutazione() const {
 
-	if (range(rng) > -1 + PROB_MUTAZIONE * 2)
-		return range_mutazioni(rng);
-
-	return 1;
-
+	if (std::uniform_real_distribution<float>(0,1)(rng) < PROB_MUTAZIONE)
+    	return range_mutazioni(rng);
+	else
+    	return 1.0f;
 
 }
 

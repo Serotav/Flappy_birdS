@@ -39,7 +39,7 @@ private:	//parametri network
 	bool m_isvivo;				//descrive se � vivo o meno
 
 	static std::random_device dev;
-	static std::mt19937 rng; //https://isocpp.org/files/papers/n3551.pdf
+	static std::mt19937 rng; 
 	static std::uniform_real_distribution<float> range;
 	static std::uniform_real_distribution<float> range_mutazioni;
 

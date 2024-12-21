@@ -46,7 +46,7 @@ public:
 		this->checkBounds();
 		float movementVector[2] = {speed, verticalOffset};
 
-		if (brain->lavora(movementVector)[0] > 0) 
+		if (brain->lavora(movementVector)[0] > 0.5f) 
 			this->updatePosition(jump_height);
 			
 		else 
