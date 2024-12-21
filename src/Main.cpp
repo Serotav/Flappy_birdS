@@ -9,78 +9,81 @@
 #include "NeuralHandler.h"
 
 sf::Vector2i pipevicina(pipe tubii[]);
-int DistanzaYpipeVicina(pipe tubii[], ucello& bird);
+int DistanzaYpipeVicina(pipe tubii[], gameBird& bird);
 void write_text(const std::unique_ptr<sf::Text>& testo, std::unique_ptr<sf::RenderWindow>& window, int score, int generazione, int vivi);
-int numero_vivi(ucello[]);
+int numero_vivi(gameBird[]);
 std::unique_ptr<sf::RenderWindow> create_window();
 std::pair<std::unique_ptr<sf::Text>, std::shared_ptr<sf::Font>> create_text();
+void game_loop(std::unique_ptr<sf::RenderWindow>& window, std::unique_ptr<sf::Text> &testo, std::shared_ptr<sf::Font>& font, gameBird bird[], pipe tubi[], NeuralHandler& reti);
 
 int main()
 {
 	auto window = create_window();
 	auto [testo, font] = create_text();
 
-	int nonmutare = 0;
-	int score = 0;
-	int generazione = 0;
+	pipe tubi[2] = { screenWidth,screenWidth + pipeGapHeight + pipeThickness };
+	NeuralHandler reti(numberOfBirds, 2, 3, 2, 1);
 	
-	ucello bird[numeroucelli];
-	NeuralHandler reti(numeroucelli, 2, 3, 2, 1);
-	for (int i = 0; i < numeroucelli; i++) {
-		bird[i].ricevi_cervello(reti.rp_Singolarete(i));
+	gameBird flock[numberOfBirds];
+	for (int i = 0; i < numberOfBirds; i++) {
+		flock[i].get_brain(reti.rp_Singolarete(i));
 	}
 	
-	pipe tubi[2] = { larghezza,larghezza + spaziopipe + spessorepipe };
 
+	game_loop(window, testo, font , flock, tubi, reti);
+
+}
+
+void game_loop(std::unique_ptr<sf::RenderWindow>& window, std::unique_ptr<sf::Text> &testo, std::shared_ptr<sf::Font>& font, gameBird bird[], pipe tubi[], NeuralHandler& reti){
+	int score = 0;
+	int generationCount = 0;
+	sf::Event event;
 
 	while (window->isOpen()) {
 
 		window->clear(sf::Color::Cyan);
 
-		sf::Event event;
 		while (window->pollEvent(event))
 		{
 			if (event.type == sf::Event::Closed)
 				window->close();
 		}
 
-		for (int i = 0; i < numeroucelli; i++) {
+		for (int i = 0; i < numberOfBirds; i++) {
 
-			if (bird[i].isvivo()) {
-				bird[i].salta(DistanzaYpipeVicina(tubi, bird[i]));
+			if (bird[i].isAlive()) {
+				bird[i].jump(DistanzaYpipeVicina(tubi, bird[i]));
 				tubi[0].totalecollisioni(bird[i].vivo, bird[i]);
 				tubi[1].totalecollisioni(bird[i].vivo, bird[i]);
 			}
 
-			bird[i].disegna(*window);
+			bird[i].render(*window);
 		}
 
-		tubi[0].updatadisegna(*window, score);
-		tubi[1].updatadisegna(*window, score);
+		tubi[0].updateAndDraw(*window, score);
+		tubi[1].updateAndDraw(*window, score);
 
 		if (reti.mutato()) {
-			
 			score = 0;
-			tubi[0].restart(larghezza);
-			tubi[1].restart(larghezza + spaziopipe + spessorepipe);
-			generazione++;
-			for (int i = 0; i < numeroucelli; i++) {
+			tubi[0].restart(screenWidth);
+			tubi[1].restart(screenWidth + pipeGapHeight + pipeThickness);
+			generationCount++;
+			for (int i = 0; i < numberOfBirds; i++) {
 				bird[i].resetta();
 			}
 		}
-		
-		write_text(testo, window, score, generazione, reti.NumeroVivi());
-		window->display();
-		
-	}
 
+		write_text(testo, window, score, generationCount, reti.NumeroVivi());
+		window->display();
+	}
 }
+
 
 
 std::unique_ptr<sf::RenderWindow> create_window(){
     sf::ContextSettings settings;
-    settings.antialiasingLevel = 8;
-    auto window = std::make_unique<sf::RenderWindow>(sf::VideoMode(larghezza, lunghezza), "Flappy_birdS", sf::Style::Default, settings);
+    settings.antialiasingLevel = 80;
+    auto window = std::make_unique<sf::RenderWindow>(sf::VideoMode(screenWidth, screenLenght), "Flappy_birdS", sf::Style::Default, settings);
     window->setFramerateLimit(framerete);
     return window;
 }
@@ -106,11 +109,11 @@ sf::Vector2i pipevicina(pipe tubii[]) {
 	return tubii[1].rposizioni();
 }
 
-int DistanzaYpipeVicina(pipe tubii[], ucello& bird) {
+int DistanzaYpipeVicina(pipe tubii[], gameBird& bird) {
 	if (tubii[0].ritornaposizione() < tubii[1].ritornaposizione()) 
-		return bird.rAltezza() - (tubii[0].rposizioni().y + pipegap / 2);
+		return bird.rAltezza() - (tubii[0].rposizioni().y + pipeGapDistance / 2);
 
-	return bird.rAltezza() - (tubii[1].rposizioni().y + pipegap / 2);
+	return bird.rAltezza() - (tubii[1].rposizioni().y + pipeGapDistance / 2);
 }
 
 

@@ -119,7 +119,7 @@ size_t NeuralHandler::NumeroVivi() const{
 void NeuralHandler::printavettore(std::vector<int>& v) {
 	std::cout << "------VETTORE------\n\n";
 	int temp=0;
-	for (int i = 0; i < numeroucelli / 5; i++) {
+	for (int i = 0; i < numberOfBirds / 5; i++) {
 		for (const auto& c : v)
 			if (c == i)
 				temp++;

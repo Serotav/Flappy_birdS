@@ -1,13 +1,11 @@
 #pragma once
-const int lunghezza = 640;
-const int larghezza = 480;
+const int screenLenght = 640;
+const int screenWidth = 480;
 const short int framerete = 60;
 const int topspeed = 10;
-const float raggio = 23;
-const int spessorepipe = 85;
-const int lunghezzapipe = 500;
-const int spaziopipe = 200;
-const int pipegap = 155;
-const float tempo = 0.25;
-const float tempo_punteggio = 1;
-const int numeroucelli = 1024;
+const float radius = 23;
+const int pipeThickness = 85;
+const int pipeLength = 500;
+const int pipeGapHeight = 200;
+const int pipeGapDistance = 155;
+const int numberOfBirds = 1024;

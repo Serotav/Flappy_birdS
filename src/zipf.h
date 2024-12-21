@@ -36,7 +36,7 @@ public:
 std::random_device zipf::dev;
 std::mt19937 zipf::rng(dev());
 std::uniform_real_distribution<double> zipf::range(0, 1);
-std::uniform_real_distribution<double> zipf::range_nonzipf(0, numeroucelli);
+std::uniform_real_distribution<double> zipf::range_nonzipf(0, numberOfBirds);
     
 
 //cose che costruiscono e decostruiscono

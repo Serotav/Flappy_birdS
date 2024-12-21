@@ -5,7 +5,7 @@
 #include "Neuralnet.h"
 
 //>> <<
-class ucello {
+class gameBird {
 
 	int altezza;
 	float speed;
@@ -17,13 +17,13 @@ public: bool vivo = true;
 
 
 public:
-	ucello() {altezza = lunghezza / 2; speed = 0; posizione = raggio + 5; ;  corpo.setRadius(raggio); corpo.setFillColor(sf::Color(randomizzacolore(), randomizzacolore(), randomizzacolore())); corpo.setOrigin(raggio, raggio); }
+	gameBird() {altezza = screenLenght / 2; speed = 0; posizione = radius + 5; ;  corpo.setRadius(radius); corpo.setFillColor(sf::Color(randomizzacolore(), randomizzacolore(), randomizzacolore())); corpo.setOrigin(radius, radius); }
 
 	int rAltezza() const { return this->altezza; }
 
 	int rPosizione() const { return this->posizione; }
 
-	float rRaggio() const { return raggio; }
+	float rRaggio() const { return radius; }
 
 	void updata(int speed = 0) {
 		this->speed += 0.25;
@@ -35,14 +35,14 @@ public:
 
 	}
 
-	void disegna(sf::RenderWindow& window) {
+	void render(sf::RenderWindow& window) {
 		if (vivo) {
 			corpo.setPosition(posizione, altezza);
 			window.draw(corpo);
 		}
 	}
 
-	void salta(int distanzainy) {
+	void jump(int distanzainy) {
 		this->controlla();
 		if (vivo) {
 			float temp[2];
@@ -72,8 +72,8 @@ public:
 
 	void controlla() {
 		
-		if (altezza > lunghezza - raggio) { vivo = false;}
-		if (altezza < 0 + raggio) { vivo = false; }
+		if (altezza > screenLenght - radius) { vivo = false;}
+		if (altezza < 0 + radius) { vivo = false; }
 		if (!vivo) { cervello->uccidilo(); uccisi++; }
 	}
 
@@ -93,7 +93,7 @@ public:
 	}
 
 	void resetta() {
-		altezza = lunghezza / 2; 
+		altezza = screenLenght / 2; 
 		vivo = true;
 		if (uccisi) {
 			std::cout << "Morti da sopra/sotto: " << uccisi << "\n";
@@ -101,13 +101,13 @@ public:
 		}
 	}
 
-	void ricevi_cervello(neural* eccolo) {
+	void get_brain(neural* eccolo) {
 		cervello = eccolo;
 	}
 
-	bool isvivo() {
+	bool isAlive() {
 		return cervello->ritorna_isvivo();
 	}
 
 };
-int ucello::uccisi = 0;
+int gameBird::uccisi = 0;

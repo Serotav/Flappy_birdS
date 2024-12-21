@@ -18,8 +18,8 @@ public:
 	pipe(int posizione) {
 		this->randomizzaaltezza();
 		this->posizione = posizione;
-		rettangolo.setSize(sf::Vector2f(spessorepipe, lunghezzapipe));
-		rettangolo.setOrigin(0, lunghezzapipe);
+		rettangolo.setSize(sf::Vector2f(pipeThickness, pipeLength));
+		rettangolo.setOrigin(0, pipeLength);
 		rettangolo.setFillColor(sf::Color::Magenta);
 		
 	}
@@ -27,23 +27,23 @@ public:
 	void randomizzaaltezza() {
 		static std::random_device dev;
 		static std::mt19937 rng(dev());
-		static std::uniform_int_distribution<std::mt19937::result_type> range(0+2*raggio, lunghezza-7*raggio);
+		static std::uniform_int_distribution<std::mt19937::result_type> range(0+2*radius, screenLenght-7*radius);
 
 		altezza = range(rng);
 	}
 
-	void azzeraposizione() { posizione = larghezza; }
+	void azzeraposizione() { posizione = screenWidth; }
 
-	void updatadisegna(sf::RenderWindow& window, int &score) {
+	void updateAndDraw(sf::RenderWindow& window, int &score) {
 		
 		this->posizione -= 1;
-		if (posizione < -spessorepipe) { this->azzeraposizione(); this->randomizzaaltezza(); score++; }
+		if (posizione < -pipeThickness) { this->azzeraposizione(); this->randomizzaaltezza(); score++; }
 		
 
 		rettangolo.setPosition(posizione, altezza);
 		window.draw(rettangolo);
 
-		rettangolo.setPosition(posizione, altezza+pipegap+lunghezzapipe);
+		rettangolo.setPosition(posizione, altezza+pipeGapDistance+pipeLength);
 		window.draw(rettangolo);
 		
 		
@@ -51,11 +51,11 @@ public:
 	}
 
 
-	void totalecollisioni(bool& vivo, ucello& cazzo) {
+	void totalecollisioni(bool& vivo, gameBird& cazzo) {
 
 		this->controllocollisioniy(this->posizione, this->altezza, this->posizione, 0, cazzo.rPosizione(), cazzo.rAltezza(), cazzo.rRaggio(), vivo);
-		this->controllocollisionix(this->posizione, this->altezza, this->posizione + spessorepipe, this->altezza, cazzo.rPosizione(), cazzo.rAltezza(), cazzo.rRaggio(), vivo);
-		this->controllocollisionix(this->posizione, this->altezza + pipegap, this->posizione + spessorepipe, this->altezza + pipegap, cazzo.rPosizione(), cazzo.rAltezza(), cazzo.rRaggio(), vivo);
+		this->controllocollisionix(this->posizione, this->altezza, this->posizione + pipeThickness, this->altezza, cazzo.rPosizione(), cazzo.rAltezza(), cazzo.rRaggio(), vivo);
+		this->controllocollisionix(this->posizione, this->altezza + pipeGapDistance, this->posizione + pipeThickness, this->altezza + pipeGapDistance, cazzo.rPosizione(), cazzo.rAltezza(), cazzo.rRaggio(), vivo);
 
 	}
 
@@ -84,8 +84,8 @@ public:
 			float impatto2_x = punti_a_x + punti_b_x * t2;
 			float impatto2_y = punti_a_y + punti_b_y * t2;
 			
-			if (!(impatto1_y >= this->altezza && impatto1_y <= this->altezza + pipegap)) { vivo = false; }
-			else if (!(impatto2_y >= this->altezza && impatto2_y <= this->altezza + pipegap)) { vivo = false; }
+			if (!(impatto1_y >= this->altezza && impatto1_y <= this->altezza + pipeGapDistance)) { vivo = false; }
+			else if (!(impatto2_y >= this->altezza && impatto2_y <= this->altezza + pipeGapDistance)) { vivo = false; }
 
 			/*std::cout << "Impatto 1: X:" << impatto1_x << " Y:" << impatto1_y << "\n";
 			std::cout << "Impatto 2: X:" << impatto2_x << " Y:" << impatto2_y << "\n";
@@ -99,11 +99,10 @@ public:
 			float impatto1_x = punti_a_x + punti_b_x * t1;
 			float impatto1_y = punti_a_y + punti_b_y * t1;
 			
-			if (!(impatto1_y >= this->altezza && impatto1_y <= this->altezza+pipegap)) { vivo = false; }
+			if (!(impatto1_y >= this->altezza && impatto1_y <= this->altezza+pipeGapDistance)) { vivo = false; }
 			
 
 		}
-		if (!vivo) return;
 		
 	}
 
@@ -129,7 +128,7 @@ public:
 			float impatto2_x = punti_a_x + punti_b_x * t2;
 			float impatto2_y = punti_a_y + punti_b_y * t2;
 			
-			if (sfera_x+raggio > this->posizione && sfera_x-raggio < this->posizione + spessorepipe) { vivo = false; }
+			if (sfera_x+radius > this->posizione && sfera_x-radius < this->posizione + pipeThickness) { vivo = false; }
 			
 
 			/*std::cout << "Impatto 1: X:" << impatto1_x << " Y:" << impatto1_y << "\n";
@@ -144,19 +143,17 @@ public:
 			float impatto1_x = punti_a_x + punti_b_x * t1;
 			float impatto1_y = punti_a_y + punti_b_y * t1;
 			
-			if (sfera_x + raggio > this->posizione && sfera_x - raggio < this->posizione + spessorepipe) { vivo = false; }
+			if (sfera_x + radius > this->posizione && sfera_x - radius < this->posizione + pipeThickness) { vivo = false; }
 			
 
 		}
 		if (!vivo)
 			uccisi++;
-		
 
 	}
 
 	float ritornaposizione() {
 		return posizione;
-		
 	}
 
 	sf::Vector2i rposizioni() {
