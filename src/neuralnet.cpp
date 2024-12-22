@@ -28,8 +28,7 @@ neural::neural(
     m_outputNeurons  = new float[m_numOutputNeurons];
     
     m_hiddenNeurons = new float*[m_numHiddenLayers];
-    for (int i = 0; i < (int)m_numHiddenLayers; i++)
-    {
+    for (int i = 0; i < (int)m_numHiddenLayers; i++){
         // Each hidden layer has [m_numHiddenNeurons + 1] neurons (including bias)
         m_hiddenNeurons[i] = new float[m_numHiddenNeurons + 1];
     }
@@ -45,8 +44,7 @@ neural::neural(
     // Hidden -> Hidden weights
     // We have (m_numHiddenLayers - 1) sets of connections
     m_weightsHidden = new float**[m_numHiddenLayers - 1];
-    for (int i = 0; i < (int)m_numHiddenLayers - 1; i++)
-    {
+    for (int i = 0; i < (int)m_numHiddenLayers - 1; i++){
         m_weightsHidden[i] = new float*[m_numHiddenNeurons + 1];
         for (int j = 0; j < (int)m_numHiddenNeurons + 1; j++)
         {
@@ -56,8 +54,7 @@ neural::neural(
 
     // Hidden -> Output weights
     m_weightsHiddenOutput = new float*[m_numHiddenNeurons + 1];
-    for (int i = 0; i < (int)m_numHiddenNeurons + 1; i++)
-    {
+    for (int i = 0; i < (int)m_numHiddenNeurons + 1; i++){
         m_weightsHiddenOutput[i] = new float[m_numOutputNeurons];
     }
 
@@ -89,33 +86,27 @@ neural::neural(const neural& other)
     std::memcpy(m_outputNeurons, other.m_outputNeurons, sizeof(float) * (m_numOutputNeurons));
 
     m_hiddenNeurons = new float*[m_numHiddenLayers];
-    for (int i = 0; i < (int)m_numHiddenLayers; i++)
-    {
+    for (int i = 0; i < (int)m_numHiddenLayers; i++){
         m_hiddenNeurons[i] = new float[m_numHiddenNeurons + 1];
         // We do NOT copy the actual hidden neuron contents here (only weights).
     }
 
     // Copy weights: input->hidden
     m_weightsInputHidden = new float*[m_numInputNeurons + 1];
-    for (int i = 0; i < (int)m_numInputNeurons + 1; i++)
-    {
+    for (int i = 0; i < (int)m_numInputNeurons + 1; i++){
         m_weightsInputHidden[i] = new float[m_numHiddenNeurons];
-        for (int j = 0; j < (int)m_numHiddenNeurons; j++)
-        {
+        for (int j = 0; j < (int)m_numHiddenNeurons; j++){
             m_weightsInputHidden[i][j] = other.m_weightsInputHidden[i][j];
         }
     }
 
     // Copy weights: hidden->hidden
     m_weightsHidden = new float**[m_numHiddenLayers - 1];
-    for (int i = 0; i < (int)m_numHiddenLayers - 1; i++)
-    {
+    for (int i = 0; i < (int)m_numHiddenLayers - 1; i++){
         m_weightsHidden[i] = new float*[m_numHiddenNeurons + 1];
-        for (int j = 0; j < (int)m_numHiddenNeurons + 1; j++)
-        {
+        for (int j = 0; j < (int)m_numHiddenNeurons + 1; j++){
             m_weightsHidden[i][j] = new float[m_numHiddenNeurons];
-            for (int k = 0; k < (int)m_numHiddenNeurons; k++)
-            {
+            for (int k = 0; k < (int)m_numHiddenNeurons; k++){
                 m_weightsHidden[i][j][k] = other.m_weightsHidden[i][j][k];
             }
         }
@@ -123,11 +114,9 @@ neural::neural(const neural& other)
 
     // Copy weights: hidden->output
     m_weightsHiddenOutput = new float*[m_numHiddenNeurons + 1];
-    for (int i = 0; i < (int)m_numHiddenNeurons + 1; i++)
-    {
+    for (int i = 0; i < (int)m_numHiddenNeurons + 1; i++){
         m_weightsHiddenOutput[i] = new float[m_numOutputNeurons];
-        for (int j = 0; j < (int)m_numOutputNeurons; j++)
-        {
+        for (int j = 0; j < (int)m_numOutputNeurons; j++){
             m_weightsHiddenOutput[i][j] = other.m_weightsHiddenOutput[i][j];
         }
     }
@@ -141,30 +130,25 @@ neural::~neural(){
     delete[] m_inputNeurons;
     delete[] m_outputNeurons;
 
-    for (int i = 0; i < (int)m_numHiddenLayers; i++)
-    {
+    for (int i = 0; i < (int)m_numHiddenLayers; i++){
         delete[] m_hiddenNeurons[i];
     }
     delete[] m_hiddenNeurons;
 
-    for (int i = 0; i < (int)m_numInputNeurons + 1; i++)
-    {
+    for (int i = 0; i < (int)m_numInputNeurons + 1; i++){
         delete[] m_weightsInputHidden[i];
     }
     delete[] m_weightsInputHidden;
 
-    for (int i = 0; i < (int)m_numHiddenLayers - 1; i++)
-    {
-        for (int j = 0; j < (int)m_numHiddenNeurons + 1; j++)
-        {
+    for (int i = 0; i < (int)m_numHiddenLayers - 1; i++){
+        for (int j = 0; j < (int)m_numHiddenNeurons + 1; j++){
             delete[] m_weightsHidden[i][j];
         }
         delete[] m_weightsHidden[i];
     }
     delete[] m_weightsHidden;
 
-    for (int i = 0; i < (int)m_numHiddenNeurons + 1; i++)
-    {
+    for (int i = 0; i < (int)m_numHiddenNeurons + 1; i++){
         delete[] m_weightsHiddenOutput[i];
     }
     delete[] m_weightsHiddenOutput;
@@ -173,30 +157,23 @@ neural::~neural(){
 // Private methods
 void neural::randomizeConnections(){
     // Input->Hidden
-    for (int i = 0; i < (int)m_numInputNeurons + 1; i++)
-    {
-        for (int j = 0; j < (int)m_numHiddenNeurons; j++)
-        {
+    for (int i = 0; i < (int)m_numInputNeurons + 1; i++){
+        for (int j = 0; j < (int)m_numHiddenNeurons; j++){
             m_weightsInputHidden[i][j] = s_distributionRange(s_rng);
         }
     }
 
     // Hidden->Output
-    for (int i = 0; i < (int)m_numHiddenNeurons + 1; i++)
-    {
-        for (int j = 0; j < (int)m_numOutputNeurons; j++)
-        {
+    for (int i = 0; i < (int)m_numHiddenNeurons + 1; i++){
+        for (int j = 0; j < (int)m_numOutputNeurons; j++){
             m_weightsHiddenOutput[i][j] = s_distributionRange(s_rng);
         }
     }
 
     // Hidden->Hidden
-    for (int i = 0; i < (int)m_numHiddenLayers - 1; i++)
-    {
-        for (int j = 0; j < (int)m_numHiddenNeurons + 1; j++)
-        {
-            for (int k = 0; k < (int)m_numHiddenNeurons; k++)
-            {
+    for (int i = 0; i < (int)m_numHiddenLayers - 1; i++){
+        for (int j = 0; j < (int)m_numHiddenNeurons + 1; j++){
+            for (int k = 0; k < (int)m_numHiddenNeurons; k++){
                 m_weightsHidden[i][j][k] = s_distributionRange(s_rng);
             }
         }
@@ -208,8 +185,7 @@ void neural::setBias(){
     m_inputNeurons[m_numInputNeurons] = 1.0f;
 
     // For each hidden layer, set the last neuron as bias
-    for (int i = 0; i < (int)m_numHiddenLayers; i++)
-    {
+    for (int i = 0; i < (int)m_numHiddenLayers; i++){
         m_hiddenNeurons[i][m_numHiddenNeurons] = 1.0f;
     }
 }
@@ -221,16 +197,13 @@ float neural::activationFunction(float value) const{
 
 void neural::resetNeurons(){
     // Reset output neurons
-    for (int i = 0; i < (int)m_numOutputNeurons; i++)
-    {
+    for (int i = 0; i < (int)m_numOutputNeurons; i++){
         m_outputNeurons[i] = 0.0f;
     }
 
     // Reset hidden neurons (not including bias)
-    for (int i = 0; i < (int)m_numHiddenLayers; i++)
-    {
-        for (int j = 0; j < (int)m_numHiddenNeurons; j++)
-        {
+    for (int i = 0; i < (int)m_numHiddenLayers; i++){
+        for (int j = 0; j < (int)m_numHiddenNeurons; j++){
             m_hiddenNeurons[i][j] = 0.0f;
         }
     }
@@ -251,16 +224,13 @@ float* neural::feedForward(float inputArray[]){
     resetNeurons();
 
     // 2) Copy input values
-    for (int i = 0; i < (int)m_numInputNeurons; i++)
-    {
+    for (int i = 0; i < (int)m_numInputNeurons; i++){
         m_inputNeurons[i] = inputArray[i];
     }
 
     // 3) From input layer to first hidden layer
-    for (int i = 0; i < (int)m_numHiddenNeurons; i++)
-    {
-        for (int j = 0; j < (int)m_numInputNeurons; j++)
-        {
+    for (int i = 0; i < (int)m_numHiddenNeurons; i++){
+        for (int j = 0; j < (int)m_numInputNeurons; j++){
             m_hiddenNeurons[0][i] += m_inputNeurons[j] * m_weightsInputHidden[j][i];
         }
         // Include bias from input layer
@@ -269,12 +239,9 @@ float* neural::feedForward(float inputArray[]){
     }
 
     // 4) From one hidden layer to the next
-    for (int layer = 0; layer < (int)m_numHiddenLayers - 1; layer++)
-    {
-        for (int neuronIndex = 0; neuronIndex < (int)m_numHiddenNeurons; neuronIndex++)
-        {
-            for (int nextNeuron = 0; nextNeuron < (int)m_numHiddenNeurons; nextNeuron++)
-            {
+    for (int layer = 0; layer < (int)m_numHiddenLayers - 1; layer++){
+        for (int neuronIndex = 0; neuronIndex < (int)m_numHiddenNeurons; neuronIndex++){
+            for (int nextNeuron = 0; nextNeuron < (int)m_numHiddenNeurons; nextNeuron++){
                 m_hiddenNeurons[layer + 1][nextNeuron] += 
                     m_hiddenNeurons[layer][neuronIndex] * m_weightsHidden[layer][neuronIndex][nextNeuron];
             }
@@ -283,17 +250,14 @@ float* neural::feedForward(float inputArray[]){
                 m_hiddenNeurons[layer][m_numHiddenNeurons] * m_weightsHidden[layer][m_numHiddenNeurons][neuronIndex];
         }
         // Apply activation
-        for (int nextNeuron = 0; nextNeuron < (int)m_numHiddenNeurons; nextNeuron++)
-        {
+        for (int nextNeuron = 0; nextNeuron < (int)m_numHiddenNeurons; nextNeuron++){
             m_hiddenNeurons[layer + 1][nextNeuron] = activationFunction(m_hiddenNeurons[layer + 1][nextNeuron]);
         }
     }
 
     // 5) From last hidden layer to output
-    for (int i = 0; i < (int)m_numOutputNeurons; i++)
-    {
-        for (int j = 0; j < (int)m_numHiddenNeurons; j++)
-        {
+    for (int i = 0; i < (int)m_numOutputNeurons; i++){
+        for (int j = 0; j < (int)m_numHiddenNeurons; j++){
             m_outputNeurons[i] += m_hiddenNeurons[m_numHiddenLayers - 1][j] * m_weightsHiddenOutput[j][i];
         }
         // Add bias from last hidden layer
@@ -324,31 +288,24 @@ void neural::mutate(neural& parentNetwork){
     float*** parentHidden         = parentNetwork.getWeightsHidden();
 
     // Mutate input->hidden
-    for (int i = 0; i < (int)m_numInputNeurons + 1; i++)
-    {
-        for (int j = 0; j < (int)m_numHiddenNeurons; j++)
-        {
+    for (int i = 0; i < (int)m_numInputNeurons + 1; i++){
+        for (int j = 0; j < (int)m_numHiddenNeurons; j++){
             m_weightsInputHidden[i][j] = parentInputHidden[i][j] * randomizeMutation();
         }
     }
 
     // Mutate hidden->hidden
-    for (int layer = 0; layer < (int)m_numHiddenLayers - 1; layer++)
-    {
-        for (int i = 0; i < (int)m_numHiddenNeurons + 1; i++)
-        {
-            for (int j = 0; j < (int)m_numHiddenNeurons; j++)
-            {
+    for (int layer = 0; layer < (int)m_numHiddenLayers - 1; layer++){
+        for (int i = 0; i < (int)m_numHiddenNeurons + 1; i++){
+            for (int j = 0; j < (int)m_numHiddenNeurons; j++){
                 m_weightsHidden[layer][i][j] = parentHidden[layer][i][j] * randomizeMutation();
             }
         }
     }
 
     // Mutate hidden->output
-    for (int i = 0; i < (int)m_numHiddenNeurons + 1; i++)
-    {
-        for (int j = 0; j < (int)m_numOutputNeurons; j++)
-        {
+    for (int i = 0; i < (int)m_numHiddenNeurons + 1; i++){
+        for (int j = 0; j < (int)m_numOutputNeurons; j++){
             m_weightsHiddenOutput[i][j] = parentHiddenOutput[i][j] * randomizeMutation();
         }
     }
@@ -358,38 +315,31 @@ void neural::mutate(neural& parentNetwork){
     m_isAlive   = true;
 }
 
-void neural::mutate(NeuralPassato& parentSnapshot){
+void neural::mutate(NeuralPrev& parentSnapshot){
     // Retrieve parent's weight pointers
     float**  parentInputHidden    = parentSnapshot.getWeightsInputHidden();
     float**  parentHiddenOutput   = parentSnapshot.getWeightsHiddenOutput();
     float*** parentHidden         = parentSnapshot.getWeightsHidden();
 
     // Mutate input->hidden
-    for (int i = 0; i < (int)m_numInputNeurons + 1; i++)
-    {
-        for (int j = 0; j < (int)m_numHiddenNeurons; j++)
-        {
+    for (int i = 0; i < (int)m_numInputNeurons + 1; i++){
+        for (int j = 0; j < (int)m_numHiddenNeurons; j++){
             m_weightsInputHidden[i][j] = parentInputHidden[i][j] * randomizeMutation();
         }
     }
 
     // Mutate hidden->hidden
-    for (int layer = 0; layer < (int)m_numHiddenLayers - 1; layer++)
-    {
-        for (int i = 0; i < (int)m_numHiddenNeurons + 1; i++)
-        {
-            for (int j = 0; j < (int)m_numHiddenNeurons; j++)
-            {
+    for (int layer = 0; layer < (int)m_numHiddenLayers - 1; layer++){
+        for (int i = 0; i < (int)m_numHiddenNeurons + 1; i++){
+            for (int j = 0; j < (int)m_numHiddenNeurons; j++){
                 m_weightsHidden[layer][i][j] = parentHidden[layer][i][j] * randomizeMutation();
             }
         }
     }
 
     // Mutate hidden->output
-    for (int i = 0; i < (int)m_numHiddenNeurons + 1; i++)
-    {
-        for (int j = 0; j < (int)m_numOutputNeurons; j++)
-        {
+    for (int i = 0; i < (int)m_numHiddenNeurons + 1; i++){
+        for (int j = 0; j < (int)m_numOutputNeurons; j++){
             m_weightsHiddenOutput[i][j] = parentHiddenOutput[i][j] * randomizeMutation();
         }
     }
@@ -400,8 +350,7 @@ void neural::mutate(NeuralPassato& parentSnapshot){
 }
 
 void neural::die(){
-    if (m_isAlive)
-    {
+    if (m_isAlive){
         m_isAlive = false;
         m_score = CURRENT_TIME - m_startTime;
     }
@@ -430,25 +379,20 @@ void neural::printNetwork() const{
 
     // Weights
     std::cout << "\n\nWEIGHTS (the last neuron is always bias)\nINPUT->HIDDEN:\n";
-    for (int i = 0; i < (int)m_numInputNeurons + 1; i++)
-    {
+    for (int i = 0; i < (int)m_numInputNeurons + 1; i++){
         std::cout << "Neuron i=" << i << ": ";
-        for (int j = 0; j < (int)m_numHiddenNeurons; j++)
-        {
+        for (int j = 0; j < (int)m_numHiddenNeurons; j++){
             std::cout << m_weightsInputHidden[i][j] << " ";
         }
         std::cout << "\n";
     }
 
     std::cout << "\n\nHIDDEN->HIDDEN:\n";
-    for (int layer = 0; layer < (int)m_numHiddenLayers - 1; layer++)
-    {
+    for (int layer = 0; layer < (int)m_numHiddenLayers - 1; layer++){
         std::cout << "Between layer " << layer << " and " << layer + 1 << "\n";
-        for (int i = 0; i < (int)m_numHiddenNeurons + 1; i++)
-        {
+        for (int i = 0; i < (int)m_numHiddenNeurons + 1; i++){
             std::cout << "Neuron i=" << i << ": ";
-            for (int j = 0; j < (int)m_numHiddenNeurons; j++)
-            {
+            for (int j = 0; j < (int)m_numHiddenNeurons; j++){
                 std::cout << m_weightsHidden[layer][i][j] << " ";
             }
             std::cout << "\n";
@@ -456,11 +400,9 @@ void neural::printNetwork() const{
     }
 
     std::cout << "\n\nLAST HIDDEN->OUTPUT:\n";
-    for (int i = 0; i < (int)m_numHiddenNeurons + 1; i++)
-    {
+    for (int i = 0; i < (int)m_numHiddenNeurons + 1; i++){
         std::cout << "Neuron i=" << i << ": ";
-        for (int j = 0; j < (int)m_numOutputNeurons; j++)
-        {
+        for (int j = 0; j < (int)m_numOutputNeurons; j++){
             std::cout << m_weightsHiddenOutput[i][j] << " ";
         }
         std::cout << "\n";
@@ -468,8 +410,7 @@ void neural::printNetwork() const{
 }
 
 void neural::printRandomSamples(int count) const{
-    for (int i = 0; i < count; i++)
-    {
+    for (int i = 0; i < count; i++){
         std::cout << s_distributionRange(s_rng) << "\n";
     }
 }

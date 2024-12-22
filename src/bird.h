@@ -2,26 +2,34 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
-#include "global_const.h"
+#include "globalConst.h"
 #include "neuralnet.h"
 
 //>> <<
 class gameBird {
 
+	private:
 	int height;
 	int x_position;
 
 	float speed;
 	sf::CircleShape birdBody;
 	neural* brain;
-public: bool alive = true;
+	bool alive = true;
 
 
 public:
-	gameBird() {height = screenLenght / 2; speed = 0; x_position = radius + 5; ;  birdBody.setRadius(radius); birdBody.setFillColor(sf::Color(ranzodmizeColor(), ranzodmizeColor(), ranzodmizeColor())); birdBody.setOrigin(radius, radius); }
-	int rAltezza() const { return this->height; }
-	int rPosizione() const { return this->x_position; }
-	float rRaggio() const { return radius; }
+	gameBird() 
+		: height(screenLenght / 2), speed(0), x_position(radius + 5) {
+		birdBody.setRadius(radius);
+		birdBody.setFillColor(sf::Color(randomizeColor(), randomizeColor(), randomizeColor()));
+		birdBody.setOrigin(radius, radius);
+		birdBody.setOutlineThickness(1);
+		birdBody.setOutlineColor(sf::Color::Black);
+	}
+	int getHeight() const { return this->height; }
+	int getPositionX() const { return this->x_position; }
+	float getRadius() const { return radius; }
 
 	void updatePosition(int speed = 0) {
 		this->speed += 0.25 - speed;
@@ -58,12 +66,8 @@ public:
 		if (height < 0 + radius) {this->die();}
 	}
 
-	sf::Vector2f ritornaposizione() {
-		return sf::Vector2f(x_position, height);
-	}
 
-
-	int ranzodmizeColor() {
+	int randomizeColor() {
 
 		static std::random_device dev;
 		static std::mt19937 rng(dev());

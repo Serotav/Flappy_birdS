@@ -1,7 +1,7 @@
 #include "neuralPrev.h"
 
 // Constructor
-NeuralPassato::NeuralPassato(int numIn, int numHidden, int layers, int numOut)
+NeuralPrev::NeuralPrev(int numIn, int numHidden, int layers, int numOut)
     : m_numInputNeurons(numIn)
     , m_numHiddenNeurons(numHidden)
     , m_numHiddenLayers(layers)
@@ -33,7 +33,7 @@ NeuralPassato::NeuralPassato(int numIn, int numHidden, int layers, int numOut)
 }
 
 // Copy constructor
-NeuralPassato::NeuralPassato(const NeuralPassato& other)
+NeuralPrev::NeuralPrev(const NeuralPrev& other)
     : m_numInputNeurons(other.m_numInputNeurons)
     , m_numHiddenNeurons(other.m_numHiddenNeurons)
     , m_numHiddenLayers(other.m_numHiddenLayers)
@@ -53,14 +53,11 @@ NeuralPassato::NeuralPassato(const NeuralPassato& other)
 
     // Allocate and copy hidden->hidden
     m_weightsHidden = new float**[m_numHiddenLayers - 1];
-    for (int i = 0; i < (int)m_numHiddenLayers - 1; i++)
-    {
+    for (int i = 0; i < (int)m_numHiddenLayers - 1; i++){
         m_weightsHidden[i] = new float*[m_numHiddenNeurons + 1];
-        for (int j = 0; j < (int)m_numHiddenNeurons + 1; j++)
-        {
+        for (int j = 0; j < (int)m_numHiddenNeurons + 1; j++){
             m_weightsHidden[i][j] = new float[m_numHiddenNeurons];
-            for (int k = 0; k < (int)m_numHiddenNeurons; k++)
-            {
+            for (int k = 0; k < (int)m_numHiddenNeurons; k++){
                 m_weightsHidden[i][j][k] = other.m_weightsHidden[i][j][k];
             }
         }
@@ -68,51 +65,45 @@ NeuralPassato::NeuralPassato(const NeuralPassato& other)
 
     // Allocate and copy hidden->output
     m_weightsHiddenOutput = new float*[m_numHiddenNeurons + 1];
-    for (int i = 0; i < (int)m_numHiddenNeurons + 1; i++)
-    {
+    for (int i = 0; i < (int)m_numHiddenNeurons + 1; i++){
         m_weightsHiddenOutput[i] = new float[m_numOutputNeurons];
-        for (int j = 0; j < (int)m_numOutputNeurons; j++)
-        {
+        for (int j = 0; j < (int)m_numOutputNeurons; j++){
             m_weightsHiddenOutput[i][j] = other.m_weightsHiddenOutput[i][j];
         }
     }
 }
 
 // Destructor
-NeuralPassato::~NeuralPassato(){
-    for (int i = 0; i < (int)m_numInputNeurons + 1; i++)
-    {
+NeuralPrev::~NeuralPrev(){
+    for (int i = 0; i < (int)m_numInputNeurons + 1; i++){
         delete[] m_weightsInputHidden[i];
     }
     delete[] m_weightsInputHidden;
 
-    for (int i = 0; i < (int)m_numHiddenLayers - 1; i++)
-    {
-        for (int j = 0; j < (int)m_numHiddenNeurons + 1; j++)
-        {
+    for (int i = 0; i < (int)m_numHiddenLayers - 1; i++){
+        for (int j = 0; j < (int)m_numHiddenNeurons + 1; j++){
             delete[] m_weightsHidden[i][j];
         }
         delete[] m_weightsHidden[i];
     }
     delete[] m_weightsHidden;
 
-    for (int i = 0; i < (int)m_numHiddenNeurons + 1; i++)
-    {
+    for (int i = 0; i < (int)m_numHiddenNeurons + 1; i++){
         delete[] m_weightsHiddenOutput[i];
     }
     delete[] m_weightsHiddenOutput;
 }
 
 // Operators
-bool NeuralPassato::operator<(const NeuralPassato& other) const{
+bool NeuralPrev::operator<(const NeuralPrev& other) const{
     return m_score < other.m_score;
 }
 
-bool NeuralPassato::operator>(const NeuralPassato& other) const{
+bool NeuralPrev::operator>(const NeuralPrev& other) const{
     return m_score > other.m_score;
 }
 
-NeuralPassato& NeuralPassato::operator=(const NeuralPassato& other){
+NeuralPrev& NeuralPrev::operator=(const NeuralPrev& other){
     m_score             = other.m_score;
     m_numInputNeurons   = other.m_numInputNeurons;
     m_numHiddenNeurons  = other.m_numHiddenNeurons;
@@ -120,31 +111,24 @@ NeuralPassato& NeuralPassato::operator=(const NeuralPassato& other){
     m_numOutputNeurons  = other.m_numOutputNeurons;
 
     // Copy input->hidden
-    for (int i = 0; i < (int)m_numInputNeurons + 1; i++)
-    {
-        for (int j = 0; j < (int)m_numHiddenNeurons; j++)
-        {
+    for (int i = 0; i < (int)m_numInputNeurons + 1; i++){
+        for (int j = 0; j < (int)m_numHiddenNeurons; j++){
             m_weightsInputHidden[i][j] = other.m_weightsInputHidden[i][j];
         }
     }
 
     // Copy hidden->hidden
-    for (int i = 0; i < (int)m_numHiddenLayers - 1; i++)
-    {
-        for (int j = 0; j < (int)m_numHiddenNeurons + 1; j++)
-        {
-            for (int k = 0; k < (int)m_numHiddenNeurons; k++)
-            {
+    for (int i = 0; i < (int)m_numHiddenLayers - 1; i++){
+        for (int j = 0; j < (int)m_numHiddenNeurons + 1; j++){
+            for (int k = 0; k < (int)m_numHiddenNeurons; k++){
                 m_weightsHidden[i][j][k] = other.m_weightsHidden[i][j][k];
             }
         }
     }
 
     // Copy hidden->output
-    for (int i = 0; i < (int)m_numHiddenNeurons + 1; i++)
-    {
-        for (int j = 0; j < (int)m_numOutputNeurons; j++)
-        {
+    for (int i = 0; i < (int)m_numHiddenNeurons + 1; i++){
+        for (int j = 0; j < (int)m_numOutputNeurons; j++){
             m_weightsHiddenOutput[i][j] = other.m_weightsHiddenOutput[i][j];
         }
     }
@@ -153,37 +137,30 @@ NeuralPassato& NeuralPassato::operator=(const NeuralPassato& other){
 }
 
 // Public functions
-void NeuralPassato::saveConnections(neural& net){
+void NeuralPrev::saveConnections(neural& net){
     float**  netInputHidden   = net.getWeightsInputHidden();
     float**  netHiddenOutput  = net.getWeightsHiddenOutput();
     float*** netHidden        = net.getWeightsHidden();
 
     // Copy input->hidden
-    for (int i = 0; i < (int)m_numInputNeurons + 1; i++)
-    {
-        for (int j = 0; j < (int)m_numHiddenNeurons; j++)
-        {
+    for (int i = 0; i < (int)m_numInputNeurons + 1; i++){
+        for (int j = 0; j < (int)m_numHiddenNeurons; j++){
             m_weightsInputHidden[i][j] = netInputHidden[i][j];
         }
     }
 
     // Copy hidden->hidden
-    for (int layer = 0; layer < (int)m_numHiddenLayers - 1; layer++)
-    {
-        for (int i = 0; i < (int)m_numHiddenNeurons + 1; i++)
-        {
-            for (int j = 0; j < (int)m_numHiddenNeurons; j++)
-            {
+    for (int layer = 0; layer < (int)m_numHiddenLayers - 1; layer++){
+        for (int i = 0; i < (int)m_numHiddenNeurons + 1; i++){
+            for (int j = 0; j < (int)m_numHiddenNeurons; j++){
                 m_weightsHidden[layer][i][j] = netHidden[layer][i][j];
             }
         }
     }
 
     // Copy hidden->output
-    for (int i = 0; i < (int)m_numHiddenNeurons + 1; i++)
-    {
-        for (int j = 0; j < (int)m_numOutputNeurons; j++)
-        {
+    for (int i = 0; i < (int)m_numHiddenNeurons + 1; i++){
+        for (int j = 0; j < (int)m_numOutputNeurons; j++){
             m_weightsHiddenOutput[i][j] = netHiddenOutput[i][j];
         }
     }
@@ -191,43 +168,38 @@ void NeuralPassato::saveConnections(neural& net){
     m_score = net.getScore();
 }
 
-float** NeuralPassato::getWeightsInputHidden() const{
+float** NeuralPrev::getWeightsInputHidden() const{
     return m_weightsInputHidden;
 }
 
-float** NeuralPassato::getWeightsHiddenOutput() const{
+float** NeuralPrev::getWeightsHiddenOutput() const{
     return m_weightsHiddenOutput;
 }
 
-float*** NeuralPassato::getWeightsHidden() const{
+float*** NeuralPrev::getWeightsHidden() const{
     return m_weightsHidden;
 }
 
-float NeuralPassato::getSnapshotScore() const{
+float NeuralPrev::getSnapshotScore() const{
     return m_score;
 }
 
-void NeuralPassato::printSnapshot() const{
+void NeuralPrev::printSnapshot() const{
     std::cout << "\n\nSTORED WEIGHTS (the last neuron is always the bias)\nINPUT->HIDDEN:\n";
-    for (int i = 0; i < (int)m_numInputNeurons + 1; i++)
-    {
+    for (int i = 0; i < (int)m_numInputNeurons + 1; i++){
         std::cout << "Neuron i=" << i << ": ";
-        for (int j = 0; j < (int)m_numHiddenNeurons; j++)
-        {
+        for (int j = 0; j < (int)m_numHiddenNeurons; j++){
             std::cout << m_weightsInputHidden[i][j] << " ";
         }
         std::cout << "\n";
     }
 
     std::cout << "\n\nHIDDEN->HIDDEN:\n";
-    for (int layer = 0; layer < (int)m_numHiddenLayers - 1; layer++)
-    {
+    for (int layer = 0; layer < (int)m_numHiddenLayers - 1; layer++){
         std::cout << "Between layer " << layer << " and " << layer + 1 << "\n";
-        for (int i = 0; i < (int)m_numHiddenNeurons + 1; i++)
-        {
+        for (int i = 0; i < (int)m_numHiddenNeurons + 1; i++){
             std::cout << "Neuron i=" << i << ": ";
-            for (int j = 0; j < (int)m_numHiddenNeurons; j++)
-            {
+            for (int j = 0; j < (int)m_numHiddenNeurons; j++){
                 std::cout << m_weightsHidden[layer][i][j] << " ";
             }
             std::cout << "\n";
@@ -235,11 +207,9 @@ void NeuralPassato::printSnapshot() const{
     }
 
     std::cout << "\n\nLAST HIDDEN->OUTPUT:\n";
-    for (int i = 0; i < (int)m_numHiddenNeurons + 1; i++)
-    {
+    for (int i = 0; i < (int)m_numHiddenNeurons + 1; i++){
         std::cout << "Neuron i=" << i << ": ";
-        for (int j = 0; j < (int)m_numOutputNeurons; j++)
-        {
+        for (int j = 0; j < (int)m_numOutputNeurons; j++){
             std::cout << m_weightsHiddenOutput[i][j] << " ";
         }
         std::cout << "\n";

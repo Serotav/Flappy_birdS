@@ -3,7 +3,7 @@
 
 class neural;
 
-class NeuralPassato 
+class NeuralPrev 
 {
 private:
     // Architecture info
@@ -21,14 +21,14 @@ public:
     float m_score; // score associated with these weights
 
     // Constructors / Destructors
-    NeuralPassato(int numIn, int numHidden, int layers, int numOut);
-    ~NeuralPassato();
-    NeuralPassato(const NeuralPassato&);
+    NeuralPrev(int numIn, int numHidden, int layers, int numOut);
+    ~NeuralPrev();
+    NeuralPrev(const NeuralPrev&);
 
     // Operator overloads
-    NeuralPassato& operator=(const NeuralPassato&);
-    bool operator<(const NeuralPassato&) const;
-    bool operator>(const NeuralPassato&) const;
+    NeuralPrev& operator=(const NeuralPrev&);
+    bool operator<(const NeuralPrev&) const;
+    bool operator>(const NeuralPrev&) const;
 
 public:
     // Public functions

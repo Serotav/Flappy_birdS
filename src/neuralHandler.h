@@ -22,7 +22,7 @@ class NeuralHandler
 {
 private:
     std::vector<neural>       m_neuralNets;    // Vector holding the current generation of neural networks
-    std::vector<NeuralPassato> m_pastNetworks; // Vector holding the 'snapshots' (past states) for mutation
+    std::vector<NeuralPrev> m_pastNetworks; // Vector holding the 'snapshots' (past states) for mutation
     size_t                    m_numNetworks;   // How many networks we have
     zipf                      m_zipfDistribution; // Used to pick parents via a Zipf distribution
 

@@ -4,7 +4,6 @@
 std::random_device zipf::dev;
 std::mt19937 zipf::rng(zipf::dev());
 std::uniform_real_distribution<double> zipf::range(0.0, 1.0);
-std::uniform_real_distribution<double> zipf::range_nonzipf(0.0, numberOfBirds);
 
 zipf::zipf(int n)
     : m_n(n), m_c(0)

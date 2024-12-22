@@ -14,7 +14,7 @@
 #define TIME_POINT_TYPE         std::chrono::system_clock::time_point
 
 //>> << <>
-class NeuralPassato;
+class NeuralPrev;
 
 class neural {
 
@@ -78,7 +78,7 @@ public:
     void  randomizeConnections();                          // Assign random weights in [-1, 1]
     float* feedForward(float inputArray[]);                // Propagate input through the network
     void  mutate(neural& parentNetwork);                   // Mutate weights, using another neural as base
-    void  mutate(NeuralPassato& parentSnapshot);           // Mutate weights, using a NeuralPassato as base
+    void  mutate(NeuralPrev& parentSnapshot);           // Mutate weights, using a NeuralPassato as base
     float**  getWeightsInputHidden() const;                // Returns the weights from input to hidden
     float**  getWeightsHiddenOutput() const;               // Returns the weights from hidden to output
     float*** getWeightsHidden() const;                     // Returns the hidden-to-hidden weights

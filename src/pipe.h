@@ -3,27 +3,28 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
-#include "global_const.h"
+#include "globalConst.h"
 #include "bird.h"
 //>> <<
 
 class pipe {
 
-	int pipeHeight;	//y
-	int posizione;	//x
+	int pipeHeight;	    //y
+	int pipePosition;	//x
 	sf::RectangleShape pipeShape;
 
 public:
-	pipe(int posizione) {
-		this->randomizzaaltezza();
-		this->posizione = posizione;
+	pipe(int positionX) {
+		this->setRandomPipeHeight();
+		this->pipePosition = positionX;
 		pipeShape.setSize(sf::Vector2f(pipeThickness, pipeLength));
 		pipeShape.setOrigin(0, pipeLength);
-		pipeShape.setFillColor(sf::Color::Magenta);
-		
+		pipeShape.setFillColor(sf::Color::Green);
+		pipeShape.setOutlineThickness(5);
+        pipeShape.setOutlineColor(sf::Color(0, 100, 0));
 	}
 
-	void randomizzaaltezza() {
+	void setRandomPipeHeight() {
 		static std::random_device dev;
 		static std::mt19937 rng(dev());
 		static std::uniform_int_distribution<std::mt19937::result_type> range(0+2*radius, screenLenght-7*radius);
@@ -31,19 +32,20 @@ public:
 		pipeHeight = range(rng);
 	}
 
-	void azzeraposizione() { posizione = screenWidth; }
+	void resetPipePosition() { pipePosition = screenWidth; }
 
-	void updatePosition(int &score){
-		this->posizione -= 1;
-		if (posizione < -pipeThickness) { this->azzeraposizione(); this->randomizzaaltezza(); score++; }
+	bool updatePosition(){
+		this->pipePosition -= 1;
+		if (pipePosition < -pipeThickness) { this->resetPipePosition(); this->setRandomPipeHeight(); return true; }
+        return false;
 	}
 
 	void render(sf::RenderWindow& window) {	
 	
-		pipeShape.setPosition(posizione, pipeHeight);
+		pipeShape.setPosition(pipePosition, pipeHeight);
 		window.draw(pipeShape);
 
-		pipeShape.setPosition(posizione, pipeHeight+pipeGapDistance+pipeLength);
+		pipeShape.setPosition(pipePosition, pipeHeight+pipeGapDistance+pipeLength);
 		window.draw(pipeShape);
 		
 	}
@@ -51,9 +53,9 @@ public:
 
 	void evaluateCollisions(gameBird& bird) {
 
-		this->checkCollisionY(bird, this->posizione, this->pipeHeight, this->posizione, 0, bird.rPosizione(), bird.rAltezza(), bird.rRaggio());
-		this->checkCollisionX(bird, this->posizione, this->pipeHeight, this->posizione + pipeThickness, this->pipeHeight, bird.rPosizione(), bird.rAltezza(), bird.rRaggio());
-		this->checkCollisionX(bird, this->posizione, this->pipeHeight + pipeGapDistance, this->posizione + pipeThickness, this->pipeHeight + pipeGapDistance, bird.rPosizione(), bird.rAltezza(), bird.rRaggio());
+		this->checkCollisionY(bird, this->pipePosition, this->pipeHeight, this->pipePosition, 0, bird.getPositionX(), bird.getHeight(), bird.getRadius());
+		this->checkCollisionX(bird, this->pipePosition, this->pipeHeight, this->pipePosition + pipeThickness, this->pipeHeight, bird.getPositionX(), bird.getHeight(), bird.getRadius());
+		this->checkCollisionX(bird, this->pipePosition, this->pipeHeight + pipeGapDistance, this->pipePosition + pipeThickness, this->pipeHeight + pipeGapDistance, bird.getPositionX(), bird.getHeight(), bird.getRadius());
 
 	}
 
@@ -162,37 +164,37 @@ void checkCollisionX(
         float impact2X = startX + dx * t2;
         float impact2Y = startY + dy * t2;
 
-        if ((circleCenterX + circleRadius > this->posizione) &&
-            (circleCenterX - circleRadius < this->posizione + pipeThickness)) {
+        if ((circleCenterX + circleRadius > this->pipePosition) &&
+            (circleCenterX - circleRadius < this->pipePosition + pipeThickness)) {
             bird.die();
             return;
         }
     }
     else {
-        if ((circleCenterX + circleRadius > this->posizione) &&
-            (circleCenterX - circleRadius < this->posizione + pipeThickness)) {
+        if ((circleCenterX + circleRadius > this->pipePosition) &&
+            (circleCenterX - circleRadius < this->pipePosition + pipeThickness)) {
             bird.die();
         }
     }
 }
 
 
-	float ritornaposizione() {
-		return posizione;
+	float getPositionX() {
+		return pipePosition;
 	}
 
-	sf::Vector2i rposizioni() {
+	sf::Vector2i getPipePosition() {
 		sf::Vector2i vettore;
-		vettore.x = posizione;
+		vettore.x = pipePosition;
 		vettore.y = pipeHeight;
 		return vettore;
 
 
 	}
 
-	void restart(int posizione) {
-		this->randomizzaaltezza();
-		this->posizione = posizione;
+	void reset(int newPosition) {
+		this->setRandomPipeHeight();
+		this->pipePosition = newPosition;
 	}
 
 

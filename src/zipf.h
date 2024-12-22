@@ -2,8 +2,7 @@
 #include <random>
 #include <vector>
 #include <cmath>
-
-#include "global_const.h"
+#include "globalConst.h"
 
 class zipf {
 private:
@@ -19,13 +18,10 @@ private:
     static std::random_device dev;
     static std::mt19937 rng;
     static std::uniform_real_distribution<double> range;
-    static std::uniform_real_distribution<double> range_nonzipf;
 
 public:
-    // Constructor / Destructor
     zipf(int n);
     ~zipf();
 
-    // Functions
     int randomZipfVal();
 };
